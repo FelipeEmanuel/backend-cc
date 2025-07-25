@@ -9,7 +9,7 @@ RUN npm install
 
 # Copia o restante da aplicação, incluindo o .env
 COPY . .
-COPY .env .env
+#COPY .env .env
 
 # Transpila o TypeScript
 RUN npm run build

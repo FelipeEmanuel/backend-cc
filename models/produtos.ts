@@ -4,6 +4,7 @@ const produtosSchema = new mongoose.Schema({
     name: {type: String, required: true, unique: true},
     qtd: {type: Number},
     price: {type: Number},
+    totalPrice: {type: Number},
     type: {type: String},
 },{
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

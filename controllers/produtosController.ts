@@ -1,6 +1,19 @@
 import asyncHandler from 'express-async-handler'
 import Produto from '../models/produtos'
 
+const getTotalandTotalValueProdutos = asyncHandler(async (req, res) => {
+    
+    const produtos = await Produto.find()
+
+    const totalValue = produtos.reduce((acc, produto) => acc + (produto.totalPrice || 0), 0)
+    const totalQtd = produtos.reduce((acc, produto) => acc + (produto.qtd || 0), 0)
+        
+    const count = await Produto.countDocuments()
+
+    res.status(200).json({count, totalValue, totalQtd})
+    
+})
+
 const getProdutos = asyncHandler(async (req, res) => {
 
     const { filters } = req.query;
@@ -28,7 +41,7 @@ const getProdutos = asyncHandler(async (req, res) => {
 
 const createProduto = asyncHandler(async (req, res) => {
 
-    const {name, qtd, price, type} = req.body
+    const {name, qtd, price, type, totalPrice} = req.body
 
     if (!name) {
         res.status(400)
@@ -37,7 +50,7 @@ const createProduto = asyncHandler(async (req, res) => {
 
     //const game = await Palpite.create(obj)
     const produto = await Produto.create({
-        name, qtd, price, type
+        name, qtd, price, type, totalPrice
     })
 
     res.status(200).json(produto)
@@ -61,7 +74,6 @@ const deleteProduto = asyncHandler(async (req, res) => {
     
     try {
         await Produto.findByIdAndDelete(req.params.id)
-        //const produtos = await Produto.find().sort({'createdAt': -1}).limit(100)
         res.status(200).json("Deletado")
     } catch (error) {
         res.status(400)
@@ -72,4 +84,4 @@ const deleteProduto = asyncHandler(async (req, res) => {
 })
 
 
-export default { getProdutos, createProduto, updateProduto, deleteProduto }
+export default { getProdutos, createProduto, updateProduto, deleteProduto, getTotalandTotalValueProdutos }
